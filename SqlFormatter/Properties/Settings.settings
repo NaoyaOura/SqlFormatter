@@ -1,0 +1,44 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SqlFormatter.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SettingFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">default</Value>
+    </Setting>
+    <Setting Name="InputText" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-- comment
+/*
+   multi comment
+*/
+select
+/*+
+    LEADING(X,Y)
+*/
+ X.*
+, X.FUNC_NM AS  FUNC_NM
+, 'moji' as MOJI
+, 3 suuji
+,    ROWNUM AS NUM
+,(1+1) AS TWO
+, CASE WHEN x.HOGE = 1 THEN 2 ELSE 0 END
+/* x */
+from
+ DOC_PARTITION X
+,(   SELECT
+     "fuga"
+   , "HOGE"
+   FROM DUAL
+) Y
+where
+ 1=1
+AND X.HOGE = 'sss'
+AND X.FUGAGA = 'xxx'
+-- AND X.PIYO LIKE '%Foo\_' escape '\'
+AND X.PIYO2 &gt; 300
+ORDER BY
+    GIGA$ DESC
+, BIBA ASC
+;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
