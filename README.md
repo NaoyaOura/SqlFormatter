@@ -8,6 +8,6 @@
 ![](image/Demo.gif)
 
 
-## 設定画面でも
+## 設定画面デモ
 
 ![](image/SettingDemo.gif)
