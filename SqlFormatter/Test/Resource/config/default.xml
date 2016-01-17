@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ConfigEntity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <IsDeleteComment>false</IsDeleteComment>
+  <GeneralIndentType>Tab</GeneralIndentType>
+  <TopReservedWordAfterIndent>Always</TopReservedWordAfterIndent>
+  <OneEqualOneComplement>false</OneEqualOneComplement>
+  <OuterJoinComplement>Left</OuterJoinComplement>
+  <CommaIndentPattern>After</CommaIndentPattern>
+  <AndOrIndentPattern>After</AndOrIndentPattern>
+  <TopReservedWordCase>UpperCase</TopReservedWordCase>
+  <ReservedWordCase>UpperCase</ReservedWordCase>
+  <TableNameCase>UpperCase</TableNameCase>
+  <ColumnNameCase>UpperCase</ColumnNameCase>
+  <AliasNameCase>UpperCase</AliasNameCase>
+  <OtherWordCase>UpperCase</OtherWordCase>
+  <IsKeywordWhenIndent>true</IsKeywordWhenIndent>
+  <IsReservedWordLineBreak>true</IsReservedWordLineBreak>
+</ConfigEntity>

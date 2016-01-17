@@ -1,0 +1,7 @@
+SELECT
+/*+
+    LEADING(X,Y)
+*/
+	X.*
+FROM
+	MS_HOGE	X
