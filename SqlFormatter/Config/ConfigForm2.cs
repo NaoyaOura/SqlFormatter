@@ -25,6 +25,13 @@ namespace SqlFormatter.Config
         public ConfigForm2()
         {
             InitializeComponent();
+
+            if (!Directory.Exists(_defaultDirectory))
+            {
+                Directory.CreateDirectory(_defaultDirectory);
+                return;
+            }
+
             foreach (string path in Directory.GetFiles(_defaultDirectory))
             {
                 string fileName = Path.GetFileNameWithoutExtension(path);
