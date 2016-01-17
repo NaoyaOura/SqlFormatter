@@ -5,11 +5,15 @@ namespace SqlFormatter.SQL.Ast.Parser.Tokenizer
 {
     class StatementSeparatorTokenizer : ITokenizer
     {
-        private readonly Regex _regex = new Regex("^(?<target>,|AND|OR?)($|\\s|" + ReservedWords.RegexBoundaries + ")");
+        private readonly Regex _regex = new Regex("^(?<target>AND|OR?)($|\\s+|" + ReservedWords.RegexBoundaries + ")");
         public IAstNode CreateIAstNode(IAstNode beforeNode, string token)
         {
             Match match = _regex.Match(token);
-            if (match.Success)
+            if (token[0] == ',')
+            {
+                return new StatementSeparator(beforeNode, ",");
+            }
+            else if (match.Success)
             {
                 return new StatementSeparator(beforeNode, match.Groups["target"].Value);
             }

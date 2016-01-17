@@ -46,30 +46,7 @@ namespace SqlFormatter.SQL.Ast.Visitor
 
         public override bool Visit(AliasDefine node)
         {
-            if (node.Order == AliasDefine.OrderType.Table)
-            {
-                _currentLine = _tabTool.Pad(_currentLine, _LeftIndentSize.Peek());
-            }
-            else if(node.Order == AliasDefine.OrderType.Column)
-            {
-                if (node.BeforeNode.BeforeNode.OriginalValue.ToUpper().Equals("AS"))
-                {
-                    // AS区が存在するとき
-                    AddResultSql(_entity.BeforeAliasDefineWhiteSpace);
-                }
-                else if (_entity.IsReservedWordAsComplement)
-                {
-                    // AS句が存在しないが補完するとき
-                    _currentLine = _tabTool.Pad(_currentLine, _LeftIndentSize.Peek());
-                    AddResultSql("AS");
-                    AddResultSql(_entity.BeforeAliasDefineWhiteSpace);
-                }
-                else
-                {
-                    // AS句が存在しなくて、補完もしないとき
-                    _currentLine = _tabTool.Pad(_currentLine, _LeftIndentSize.Peek());
-                }
-            }
+            _currentLine = _tabTool.Pad(_currentLine, _LeftIndentSize.Peek());
             AddResultSql(node.Value);
             return base.Visit(node);
         }
@@ -133,24 +110,7 @@ namespace SqlFormatter.SQL.Ast.Visitor
 
         public override bool Visit(MultiLineComment node)
         {
-            // ヒント句など、意図的に下げたインデントやスペースを無視してコメントがあるとき
-            // もとのコメントを保持したうえで、そのあとに意図的なインデントを再度作成する
-            if (_currentLine.Length > 0 
-                && string.IsNullOrWhiteSpace(_currentLine)
-                // コメント削除状態であれば、すでにnode.Valueが空
-                && !string.IsNullOrEmpty(node.Value)
-                )
-            {
-                string tmp = _currentLine;
-                _currentLine = string.Empty;
-                ResultSql = ResultSql.Remove(ResultSql.Length - _entity.LineSeparator.Length);
-                AddResultSql(node.Value);
-                AddResultSql(tmp);
-            }
-            else
-            {
-                AddResultSql(node.Value);
-            }
+            AddResultSql(node.Value);
             return base.Visit(node);
         }
 
@@ -186,6 +146,7 @@ namespace SqlFormatter.SQL.Ast.Visitor
             if(_entity.TopReservedWordAfterIndent == TopReservedWordIndentType.Invalid)
             {
                 _invalidDeltaIndent = node.OriginalValue.Length;
+                _invalidDeltaIndent -= _invalidDeltaIndent%4;
             }
             // 予約語のあとはインデントをひとつ下げる
             _invalidDeltaIndent += 4;
@@ -239,14 +200,21 @@ namespace SqlFormatter.SQL.Ast.Visitor
 
         public override bool Visit(Statement node)
         {
-            if (!node.HasStatementSeparator)
+            return base.Visit(node);
+        }
+
+        public override bool Visit(StatementIndent node)
+        {
+            if (!node.ParentNode.HasStatementSeparator)
             {
-                if (_entity.TopReservedWordAfterIndent == TopReservedWordIndentType.Always)
+                if (_entity.TopReservedWordAfterIndent == TopReservedWordIndentType.Always
+                    // SELECTの後すぐの改行付きヒント句の後の改行しない
+                    && _currentLine != "")
                 {
                     AddNewLineResultSql();
                 }
-                AddResultSql("\t");
             }
+            AddResultSql(_tabTool.Pad("", _invalidDeltaIndent - _currentLine.Length + 3));
             return base.Visit(node);
         }
 
@@ -272,17 +240,11 @@ namespace SqlFormatter.SQL.Ast.Visitor
 
         private void AddResultSql(IAstNode node)
         {
-            //_caseUtil.Convert(node);
             AddResultSql(node.Value);
         }
 
         private void AddNewLineResultSql()
         {
-            if (string.IsNullOrWhiteSpace(_currentLine))
-            {
-                //現在行が空であれば、空行を増やさない
-                return;
-            }
             AddResultSql(_entity.LineSeparator);
             AddResultSql(_Indents.Peek());
         }
@@ -309,13 +271,11 @@ namespace SqlFormatter.SQL.Ast.Visitor
             {
                 AddResultSql(" " + separator);
                 AddNewLineResultSql();
-                AddResultSql(_tabTool.Pad("", _invalidDeltaIndent));
             }
             else //if (ptn == IndentPattern.After)
             {
                 AddNewLineResultSql();
                 AddResultSql(separator);
-                AddResultSql("\t");
             }
         }
 

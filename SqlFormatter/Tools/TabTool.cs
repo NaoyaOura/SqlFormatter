@@ -46,8 +46,7 @@ namespace SqlFormatter.Tools
             string expand = Tab2Space(param);
             if (expand.Length >= size)
             {
-                // 埋めが不要な場合は半角スペースを追加
-                return param + " ";
+                return param;
             }
             int delta = (size - expand.Length);
             int tabCnt = delta / _tabWidth + (delta % _tabWidth > 0 ? 1 : 0);

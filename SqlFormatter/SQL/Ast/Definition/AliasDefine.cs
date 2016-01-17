@@ -8,7 +8,7 @@ namespace SqlFormatter.SQL.Ast.Definition
     public class AliasDefine : BaseAstNode
     {
         //TODO 外側のファイルに切り離す
-        private readonly Regex _regex = new Regex("^(FROM|MERGE|INSERT|UPDATE)$", RegexOptions.IgnoreCase);
+        private readonly Regex _regex = new Regex("^(FROM|MERGE|INSERT|UPDATE|USING)$", RegexOptions.IgnoreCase);
         public enum OrderType
         {
             Table, Column, Unknown

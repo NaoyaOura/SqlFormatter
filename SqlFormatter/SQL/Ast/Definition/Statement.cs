@@ -95,7 +95,8 @@ namespace SqlFormatter.SQL.Ast.Definition
             {
                 HasNestStatement = true;
             }
-            else if (node.GetType() == typeof (StatementSeparator))
+            
+            if (node.GetType() == typeof (StatementSeparator))
             {
                 HasStatementSeparator = true;
                 StatementSeparatorValue = node.OriginalValue;
@@ -111,11 +112,18 @@ namespace SqlFormatter.SQL.Ast.Definition
                      || node.GetType() == typeof (AliasDefine)
                      || node.GetType() == typeof (WhiteSpace)
                      || node.GetType() == typeof (OneLineComment)
-                     || node.GetType() == typeof (MultiLineComment))
+                     || node.GetType() == typeof (MultiLineComment)
+                        // Statementインデントをつける特殊な型のため文字数カウントを行わない
+                     || node.GetType() == typeof (StatementIndent))
             {
             }
             else
             {
+                if (LeftIndentLength == 0 && node.OriginalValue.Length != 0)
+                {
+                    // Statementに必ずつくインデントを定義する
+                    base.SetParentInChildNode(new StatementIndent(node));
+                }
                 LeftIndentLength += node.OriginalValue.Length;
             }
             base.SetParentInChildNode(node);

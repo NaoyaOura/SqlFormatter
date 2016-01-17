@@ -1,6 +1,6 @@
-﻿using System;
-using SqlFormatter.Config;
+﻿using SqlFormatter.Config;
 using SqlFormatter.SQL.Ast.Definition;
+using SqlFormatter.Tools;
 
 namespace SqlFormatter.SQL.Ast.Transformer
 {
@@ -14,19 +14,19 @@ namespace SqlFormatter.SQL.Ast.Transformer
 
         public override bool Transform(AliasDefine node)
         {
-            ConvertCaseType(_entity.AliasNameCase, node);
+            node.Value = CaseFormatUtils.Convert(_entity.AliasNameCase, node.Value);
             return base.Transform(node);
         }
 
         public override bool Transform(ReservedWord node)
         {
-            ConvertCaseType(_entity.ReservedWordCase, node);
+            node.Value = CaseFormatUtils.Convert(_entity.ReservedWordCase, node.Value);
             return base.Transform(node);
         }
 
         public override bool Transform(ReservedTopLevel node)
         {
-            ConvertCaseType(_entity.TopReservedWordCase, node);
+            node.Value = CaseFormatUtils.Convert(_entity.TopReservedWordCase, node.Value);
             return base.Transform(node);
         }
 
@@ -34,44 +34,20 @@ namespace SqlFormatter.SQL.Ast.Transformer
         {
             if (node.Order == TableOrColumnName.OrderType.Table)
             {
-                ConvertCaseType(_entity.ColumnNameCase, node);
+                node.Value = CaseFormatUtils.Convert(_entity.ColumnNameCase, node.Value);
             }
             else if (node.Order == TableOrColumnName.OrderType.Column)
             {
-                ConvertCaseType(_entity.TableNameCase, node);
+                node.Value = CaseFormatUtils.Convert(_entity.TableNameCase, node.Value);
             }
             return base.Transform(node);
         }
 
         public override bool Transform(Statement node)
         {
-            ConvertCaseType(_entity.StatementSeparatorCase, node);
+            node.Value = CaseFormatUtils.Convert(_entity.StatementSeparatorCase, node.Value);
             return base.Transform(node);
         }
-        private void ConvertCaseType(CaseType type, IAstNode node)
-        {
-            string aliasStr = string.Empty;
-            string value = node.Value;
-            int aliasIdx = node.Value.LastIndexOf(".", StringComparison.Ordinal);
-            if (aliasIdx >= 0)
-            {
-                aliasStr = node.Value.Substring(0, aliasIdx+1);
-                value = node.Value.Substring(aliasIdx + 1);
-            }
-            switch (type)
-            {
-                case CaseType.LowerCase:
-                    node.Value = aliasStr + value.ToLower();
-                    return;
-                case CaseType.UpperCase:
-                    node.Value = aliasStr + value.ToUpper();
-                    return ;
-                case CaseType.IniCap:
-                    node.Value = aliasStr + value[0].ToString().ToUpper() + value.Substring(1).ToLower();
-                    return ;
-                default:
-                    return ;
-            }
-        }
+
     }
 }

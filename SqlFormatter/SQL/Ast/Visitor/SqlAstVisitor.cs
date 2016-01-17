@@ -87,5 +87,10 @@ namespace SqlFormatter.SQL.Ast.Visitor
         {
             return true;
         }
+
+        public virtual bool Visit(StatementIndent node)
+        {
+            return true;
+        }
     }
 }

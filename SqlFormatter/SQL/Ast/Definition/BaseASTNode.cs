@@ -96,9 +96,9 @@ namespace SqlFormatter.SQL.Ast.Definition
                 }
                 else
                 {
-                    //TODO 問題なければこの分岐は削除
-                    throw new Exception("SQLの構文ミスとみた");
-                    //ParentNode = null;
+                    //文頭のMERGEやUPDATEなど親になり、階層も下がるが親ノードが存在しないとき
+                    ParentNode = BeforeNode.ParentNode;
+                    Level = BeforeNode.Level;
                 }
             }
             else if (BeforeNode.ParentNodeBecome)

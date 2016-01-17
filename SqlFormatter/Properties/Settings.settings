@@ -23,7 +23,7 @@ select
 , CASE WHEN x.HOGE = 1 THEN 2 ELSE 0 END
 /* x */
 from
- DOC_PARTITION X
+ M_HOGE X
 ,(   SELECT
      "fuga"
    , "HOGE"

@@ -8,7 +8,7 @@ namespace SqlFormatter.SQL.Ast.Definition
         public override void Initialize()
         {
             ParentNodeBecome = true;
-            ParentNodeToggleIs = (OriginalValue.ToUpper() != "SELECT");
+            ParentNodeToggleIs = (Value.ToUpper() != "SELECT");
         }
 
         public ReservedTopLevel(IAstNode preNode, string originalValue)

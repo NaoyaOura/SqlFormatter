@@ -9,11 +9,11 @@ namespace SqlFormatter.SQL
     /// </summary>
     public class ReservedWords
     {
-   
-        public static List<String> ReservedToplevel = new List<String>()
+        public static List<String> ReservedTopLevel = new List<String>()
         {
-            "SELECT", "FROM", "WHERE", "SET", "ORDER BY", "GROUP BY", "MERGE", "LIMIT", "DROP", "INSERT", "INTO", "USING", 
-        "VALUES", "UPDATE", "HAVING", "ADD", "AFTER", "ALTER TABLE", "DELETE FROM", "UNION ALL", "UNION", "EXCEPT", "INTERSECT"
+            "SELECT", "FROM", "WHERE", "SET", "ORDER BY", "GROUP BY", "MERGE", "LIMIT", "DROP", "INSERT", "INTO",  
+        "VALUES", "UPDATE", "HAVING", "ADD", "AFTER", "ALTER TABLE", "DELETE FROM", "UNION ALL", "UNION", "EXCEPT", "INTERSECT",
+        "WHEN MATCHED THEN", "WHEN NOT MATCHED THEN", "UPDATE SET"　, "ON", "USING"
         };
 
         public static List<String> Reserve = new List<String>(){
@@ -30,7 +30,7 @@ namespace SqlFormatter.SQL
         "LINES", "LOAD", "LOCAL", "LOCK", "LOCKS", "LOGS", "LOW_PRIORITY", "MARIA", "MASTER", "MASTER_CONNECT_RETRY", "MASTER_HOST", "MASTER_LOG_FILE",
         "MATCH","MAX_CONNECTIONS_PER_HOUR", "MAX_QUERIES_PER_HOUR", "MAX_ROWS", "MAX_UPDATES_PER_HOUR", "MAX_USER_CONNECTIONS",
         "MEDIUM", "MINUTE", "MINUTE_SECOND", "MIN_ROWS", "MODE", "MODIFY",
-        "MONTH", "MRG_MYISAM", "MYISAM", "NAMES", "NATURAL", "NOT", "NOW()","NULL", "OFFSET", "ON", "OPEN", "OPTIMIZE", "OPTION", "OPTIONALLY",
+        "MONTH", "MRG_MYISAM", "MYISAM", "NAMES", "NATURAL", "NOT", "NOW()","NULL", "OFFSET","USING", "ON", "OPEN", "OPTIMIZE", "OPTION", "OPTIONALLY",
         "ON UPDATE", "ON DELETE", "OUTFILE", "PACK_KEYS", "PAGE", "PARTIAL", "PARTITION", "PARTITIONS", "PASSWORD", "PRIMARY", "PRIVILEGES", "PROCEDURE",
         "PROCESS", "PROCESSLIST", "PURGE", "QUICK", "RANGE", "RAID0", "RAID_CHUNKS", "RAID_CHUNKSIZE","RAID_TYPE", "READ", "READ_ONLY",
         "READ_WRITE", "REFERENCES", "REGEXP", "RELOAD", "RENAME", "REPAIR", "REPEATABLE", "REPLACE", "REPLICATION", "RESET", "RESTORE", "RESTRICT",
@@ -88,11 +88,10 @@ namespace SqlFormatter.SQL
             , ",","(",")"
         };
 
+        public static string RegexReservedTopLevel { get; set; }
+        public static string RegexReserved { get; set; }
         public static string RegexEvalutions { get; set; }
         public static string RegexBoundaries { get; set; }
-        public static string RegexReserved { get; set; }
-        public static string RegexReservedToplevel { get; set; }
-        public static string RegexReservedNewline { get; set; }
         public static string RegexFunction { get; set; }
         public static bool ExecInitializeFlg { get; set; }
 
@@ -104,13 +103,11 @@ namespace SqlFormatter.SQL
             {
                 return;
             }
-            // Sort reserved word list from longest word to shortest, 3x faster than usort
-            Reserve.Sort((a,b) => b.Length - a.Length);
             ExecInitializeFlg = true;
 
             // Set up regular expressions
+            RegexReservedTopLevel = ParseRegExpStr(ReservedTopLevel);
             RegexReserved = ParseRegExpStr(Reserve);
-            RegexReservedToplevel = ParseRegExpStr(ReservedToplevel);
             RegexFunction = ParseRegExpStr(Functions);
             RegexEvalutions = ParseRegExpStr(Evalutions);
             RegexBoundaries = ParseRegExpBoundariesStr(Boundaries);
@@ -124,6 +121,9 @@ namespace SqlFormatter.SQL
         /// <returns></returns>
         private static string ParseRegExpStr(List<String> array)
         {
+            // Sort reserved word list from longest word to shortest, 3x faster than usort
+            array.Sort((a, b) => b.Length - a.Length);
+
             StringBuilder sb = new StringBuilder("(");
             foreach(string str in array){
                 if (sb.Length > 1)

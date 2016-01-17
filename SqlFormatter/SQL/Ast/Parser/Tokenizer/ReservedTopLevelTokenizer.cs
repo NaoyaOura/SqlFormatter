@@ -5,7 +5,7 @@ namespace SqlFormatter.SQL.Ast.Parser.Tokenizer
 {
     class ReservedTopLevelTokenizer : ITokenizer
     {
-        private readonly Regex _regex = new Regex("^(?<target>" + ReservedWords.RegexReservedToplevel + "?)($|\\s|" + ReservedWords.Boundaries + ")"
+        private readonly Regex _regex = new Regex("^(?<target>" + ReservedWords.RegexReservedTopLevel + "?)($|\\s|" + ReservedWords.Boundaries + ")"
                                         , RegexOptions.IgnoreCase);
         public IAstNode CreateIAstNode(IAstNode beforeNode, string token)
         {

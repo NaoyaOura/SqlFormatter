@@ -9,7 +9,7 @@ namespace SqlFormatter.SQL.Ast.Definition
     {
         String OriginalValue { get; }
         String Value { get; set; }
-        IAstNode BeforeNode { get; }
+        IAstNode BeforeNode { get; set; }
         IAstNode AfterNode { get; set; }
         int StartPosition { get; }
         int StartLineNo { get; }

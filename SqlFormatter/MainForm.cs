@@ -50,6 +50,10 @@ namespace SqlFormatter
             IList<ITransformer> transformers = new List<ITransformer>();
             transformers.Add(new CaseTransform(_entity));
             transformers.Add(new CommentTransform(_entity.IsDeleteComment));
+            if (_entity.IsReservedWordAsComplement)
+            {
+                transformers.Add(new AsWordCompletionTransform(_entity));
+            }
             unit.Accept(visitor,transformers);
             ResultTextBox.Text = visitor.ResultSql;
         }

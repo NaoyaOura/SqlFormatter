@@ -23,5 +23,6 @@ namespace SqlFormatter.SQL.Ast.Visitor
         bool Visit(TableOrColumnName node);
         bool Visit(WhiteSpace node);
         bool Visit(EvaluationString node);
+        bool Visit(StatementIndent node);
     }
 }
